@@ -1,7 +1,7 @@
 {
   "name": "warhammer-roller",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "sass": "^1.69.4",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
   }
