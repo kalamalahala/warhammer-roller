@@ -60,7 +60,7 @@
     <categoryEntry name="Norn Assimilator" hidden="false" id="2982-bf74-9aa7-a7a7"/>
     <categoryEntry name="Harvester" hidden="false" id="8258-a58e-7cf0-a2c3"/>
     <categoryEntry name="Terror of Vardenghast" hidden="false" id="7edf-be7-243d-218e"/>
-  </categoryEntries>
+  </categoryEntries> 
   <entryLinks>
     <entryLink id="706e-86ff-ae9f-c65f" name="Winged Hive Tyrant" hidden="false" collective="false" import="true" targetId="fa68-fcb9-38c-cd0f" type="selectionEntry">
       <modifiers>
