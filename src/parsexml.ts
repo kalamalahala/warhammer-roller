@@ -10,7 +10,7 @@ function parseXML(node: Element): any {
         // add attribute name and value to result object with @ prefix
         for (let i = 0; i < node.attributes.length; i++) {
             const attr = node.attributes[i];
-            result[node.nodeName][`@${attr.nodeName}`] = attr.nodeValue;
+            result[node.nodeName][`${attr.nodeName}`] = attr.nodeValue;
         }
     }
 

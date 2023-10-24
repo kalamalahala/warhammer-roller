@@ -210,10 +210,18 @@ function ForceSelect() {
             catalog: "Unaligned Forces.cat",
         },
     ]);
+    const [selectedForces, setSelectedForces] = createSignal([]);
 
-    function handleSelectChange(e: any) {
-        let output: any = readXML(e.target.value);
-        console.log("output", output);
+    async function handleSelectChange(e: any) {
+        let output: any = await readXML(e.target.value);
+
+        console.log(output.catalogue.sharedSelectionEntries.selectionEntry[1]);
+
+        setSelectedForces(
+            output.catalogue.sharedSelectionEntries.selectionEntry,
+        );
+
+        console.log(selectedForces());
     }
 
     return (
@@ -237,7 +245,15 @@ function ForceSelect() {
                         )}
                     </For>
                 </select>
+
             </div>
+                    <For each={selectedForces()}>
+                        {(selectedForces, i) => (
+                            <div>
+                                <pre><p>{selectedForces[`name`]}</p></pre>
+                            </div>
+                        )}
+                    </For>
         </form>
     );
 }

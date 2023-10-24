@@ -5,6 +5,7 @@ import { Router } from '@solidjs/router';
 import App from './App';
 
 import 'solid-bootstrap';
+import 'solid-devtools';
 
 
 

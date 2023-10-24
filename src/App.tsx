@@ -11,6 +11,10 @@ function App() {
                 <Col class="col-3">
                     <ForceSelect />
                 </Col>
+                <Col class="col-3">
+                    <ForceSelect />
+                </Col>
+
             </Row>
         </>
     );
