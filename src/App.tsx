@@ -15,7 +15,6 @@ function App() {
                     <h3>Player Two</h3>
                     <ForceSelect />
                 </Col>
-
             </Row>
         </>
     );
