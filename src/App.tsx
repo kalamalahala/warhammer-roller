@@ -1,4 +1,4 @@
-import ForceSelect from "./components/ForceSelect";
+import ForceSelect from "./components/ForceSelect.tsx";
 import Nav from "./components/Nav";
 import { Col, Row } from "solid-bootstrap";
 

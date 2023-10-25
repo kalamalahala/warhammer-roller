@@ -16,7 +16,7 @@ jobs:
               run: npm i --legacy-peer-deps
 
             - name: build
-              run: tsc && npm run build
+              run: npm run build
 
             - name: deploy pages
               uses: JamesIves/github-pages-deploy-action@v4
