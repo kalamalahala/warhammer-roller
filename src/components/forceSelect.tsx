@@ -1,10 +1,10 @@
 import { For, Show, createSignal } from "solid-js";
+import { Row, Col } from "solid-bootstrap";
 import readXML from "../readxml";
 import UnitSelect from "./UnitSelect";
-import getForcesFromCatalogue from "../func/getForcesFromCatalogue";
 
 function ForceSelect() {
-    const [forces, setForces] = createSignal([
+    const [forces] = createSignal([
         {
             name: "Aeldari - Aeldari Library",
             catalog: "Aeldari - Aeldari Library.cat",
@@ -212,48 +212,76 @@ function ForceSelect() {
             catalog: "Unaligned Forces.cat",
         },
     ]);
-    const [selectedForces, setSelectedForces] = createSignal([]);
+    const [selectedForces, setSelectedForces] = createSignal([{}]);
 
     async function handleSelectChange(e: any) {
-        const output: any = await readXML(e.target.value);
 
-        setSelectedForces(
-            output.catalogue.sharedSelectionEntries.selectionEntry,
-        );
+        const catalogue: string = e.target.value;
+        if (catalogue === "Select one") { 
+            setSelectedForces([{}]);
+            return; 
+        }
 
-        console.log(output.catalogue.sharedSelectionEntries.selectionEntry);
+        await readXML(catalogue)
+            .then((res) => {
+                const entryLinks: Array<object> = res.catalogue.entryLinks.entryLink;
+                const selectionEntries: Array<object> = res.catalogue.sharedSelectionEntries.selectionEntry;
+                
+                // for each object inside entryLinks, find object in selectionEntries with id matching targetId
+                // then, push that object into a new array
+                const selectedEntries: Array<any> = [];
+                entryLinks.forEach((entryLink: any) => {
+                    const entryId: string = entryLink.targetId;
+                    const selectedEntry: any = selectionEntries.find((selectionEntry: any) => selectionEntry.id === entryId);
+                    if (selectedEntry && (selectedEntry.type === "model" || selectedEntry.type === "unit") ) { selectedEntries.push(selectedEntry) };
+                });
 
-        const units = await getForcesFromCatalogue(output);
-        console.log(units);
+                // sort selectedEntries by name
+                selectedEntries.sort((a: any, b: any) => {
+                    const nameA = a.name.toUpperCase();
+                    const nameB = b.name.toUpperCase();
+                    if (nameA < nameB) { return -1 };
+                    if (nameA > nameB) { return 1 };
+                    return 0;
+                });
+
+                setSelectedForces(selectedEntries);
+            });
     }
 
 
 
     return (
         <form>
-            <div class="mb-3">
-                <label for="forceSelectForm" class="form-label">
-                    Select Forces
-                </label>
-                <select
-                    class="form-select form-select-lg"
-                    name="forceSelectForm"
-                    id="forceSelectForm"
-                    onInput={handleSelectChange}
-                >
-                    <option selected>Select one</option>
-                    <For each={forces()}>
-                        {(forces, i) => (
-                            <option value={forces.catalog}>
-                                {forces.name}
-                            </option>
-                        )}
-                    </For>
-                </select>
+            <Row class="mb-3">
+                <Col class="mb-3 col-12">
+                    <label for="forceSelectForm" class="form-label">
+                        Select Forces
+                    </label>
+                    <select
+                        class="form-select form-select-lg"
+                        name="forceSelectForm"
+                        id="forceSelectForm"
+                        onInput={handleSelectChange}
+                    >
+                        <option selected>Select one</option>
+                        <For each={forces()}>
+                            {(forces) => (
+                                <option value={forces.catalog}>
+                                    {forces.name}
+                                </option>
+                            )}
+                        </For>
+                    </select>
 
-            </div>
-            <Show when={selectedForces().length > 0}>
-                <UnitSelect name={'hi'} catalog={'wew'} />
+                </Col>
+            </Row>
+            <Show when={selectedForces().length > 1}>
+                <Row class="mb-3">
+                    <Col class="mb-3 col-12">
+                        <UnitSelect units={selectedForces()} />
+                    </Col>
+                </Row>
             </Show>
         </form>
     );

@@ -51,16 +51,16 @@ function parseXML(node: Element): any {
             } else if (child.nodeType === Node.TEXT_NODE) {
                 // if child node is a text node, add text content to result object
 
-                if (result[node.nodeName]["#text"]) {
+                if (result[node.nodeName]["text"]) {
                     // array formatting for multiple text nodes
-                    if (!Array.isArray(result[node.nodeName]["#text"])) {
-                        result[node.nodeName]["#text"] = [
-                            result[node.nodeName]["#text"],
+                    if (!Array.isArray(result[node.nodeName]["text"])) {
+                        result[node.nodeName]["text"] = [
+                            result[node.nodeName]["text"],
                         ];
                     }
-                    result[node.nodeName]["#text"].push(node.textContent); // push text content to array
+                    result[node.nodeName]["text"].push(node.textContent); // push text content to array
                 } else {
-                    result[node.nodeName]["#text"] = node.textContent; // add text content to result object
+                    result[node.nodeName]["text"] = node.textContent; // add text content to result object
                 }
             }
         }

@@ -7,11 +7,14 @@ export default async function getForcesFromCatalogue(catalogue: SpaceMarineCatal
         return [];
     }
 
-    // loop through sharedSelectionEntries.selectionEntry[] and return array of objects with property type: "unit" || type: "model"
-    const forces: Array<any> =
-        catalogue.sharedSelectionEntries.selectionEntry.filter(
-            (entry) => entry.type == "unit" || entry.type == "model"
-        );
+    // loop through sharedSelectionEntries.selectionEntry[{}] and return array of objects with property type: "unit" || type: "model"
+    const forces: Array<any> = [];
+    for (let i = 0; i < catalogue.sharedSelectionEntries.selectionEntry.length; i++) {
+        const entry = catalogue.sharedSelectionEntries.selectionEntry[i];
+        if (entry.type === "unit" || entry.type === "model") {
+            forces.push(entry);
+        }
+    }
 
     return forces;
 }
