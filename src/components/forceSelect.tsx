@@ -1,5 +1,7 @@
-import { For, createSignal } from "solid-js";
+import { For, Show, createSignal } from "solid-js";
 import readXML from "../readxml";
+import UnitSelect from "./UnitSelect";
+import getForcesFromCatalogue from "../func/getForcesFromCatalogue";
 
 function ForceSelect() {
     const [forces, setForces] = createSignal([
@@ -213,16 +215,19 @@ function ForceSelect() {
     const [selectedForces, setSelectedForces] = createSignal([]);
 
     async function handleSelectChange(e: any) {
-        let output: any = await readXML(e.target.value);
-
-        console.log(output.catalogue.sharedSelectionEntries.selectionEntry[1]);
+        const output: any = await readXML(e.target.value);
 
         setSelectedForces(
             output.catalogue.sharedSelectionEntries.selectionEntry,
         );
 
-        console.log(selectedForces());
+        console.log(output.catalogue.sharedSelectionEntries.selectionEntry);
+
+        const units = await getForcesFromCatalogue(output);
+        console.log(units);
     }
+
+
 
     return (
         <form>
@@ -247,13 +252,9 @@ function ForceSelect() {
                 </select>
 
             </div>
-                    <For each={selectedForces()}>
-                        {(selectedForces, i) => (
-                            <div>
-                                <pre><p>{selectedForces[`name`]}</p></pre>
-                            </div>
-                        )}
-                    </For>
+            <Show when={selectedForces().length > 0}>
+                <UnitSelect name={'hi'} catalog={'wew'} />
+            </Show>
         </form>
     );
 }
