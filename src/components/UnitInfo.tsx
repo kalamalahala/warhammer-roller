@@ -28,14 +28,13 @@ const UnitInfo: Component<UnitInfoProps> = (props: UnitInfoProps) => {
             </small>
             <For each={profiles}>
                 {(profile: UnitProfile) => (
-                    <div>
+                    <div class="mb-1">
                         <h5>{profile.name}</h5>
-                        <ul>
+                        <ul class="unitStats g-3">
                             <For each={profile.characteristics.characteristic}>
                                 {(characteristic: any) => (
                                     <li>
-                                        <strong>{characteristic.name}</strong>{" "}
-                                        {characteristic.text}
+                                        <strong>{characteristic.name}</strong>&nbsp;&nbsp;&nbsp;{characteristic.text}
                                     </li>
                                 )}
                             </For>
