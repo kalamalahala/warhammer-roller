@@ -21,7 +21,6 @@ const UnitSelect: Component<any> = (props) => {
 
     async function updateSelected(unitId: string) {
         setSelectedUnit(props.units.find((unit: any) => unit.id === unitId));
-        console.log(selectedUnit());
     }
 
     return (
