@@ -6,12 +6,12 @@ function App() {
     return (
         <>
             <Nav />
-            <Row class="mt-3 p-0 justify-content-center">
-                <Col class="col-5">
+            <Row class="mt-3 px-5 justify-content-between">
+                <Col class="col-6">
                     <h3>Player One</h3>
                     <ForceSelect />
                 </Col>
-                <Col class="col-5">
+                <Col class="col-6">
                     <h3>Player Two</h3>
                     <ForceSelect />
                 </Col>

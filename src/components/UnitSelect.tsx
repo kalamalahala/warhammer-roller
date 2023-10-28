@@ -1,16 +1,24 @@
 import { Row, Col } from "solid-bootstrap";
 import { Component, For, createSignal, Show } from "solid-js";
 import UnitInfo from "./UnitInfo";
+import WeaponProfile from "./WeaponProfile";
+import CategoryLinks from "./CategoryLinks";
 
 const UnitSelect: Component<any> = (props) => {
     const [selectedUnit, setSelectedUnit] = createSignal("");
+    const [selectedUnitCategories, setSelectedUnitCategories] = createSignal([]);
+    const [selectedUnitWeapons, setSelectedUnitWeapons] = createSignal([]);
 
     async function handleUnitSelect(e: any) {
         setSelectedUnit("");
-        const unitId: string = e.target.value;
+        setSelectedUnitCategories([]);
+        setSelectedUnitWeapons([]);
+        const unitId = e.target.value;
 
         if (unitId === "Select a Unit") {
             setSelectedUnit("");
+            setSelectedUnitCategories([]);
+            setSelectedUnitWeapons([]);
             return false;
         }
 
@@ -20,7 +28,10 @@ const UnitSelect: Component<any> = (props) => {
     }
 
     async function updateSelected(unitId: string) {
-        setSelectedUnit(props.units.find((unit: any) => unit.id === unitId));
+        let unit = props.units.find((unit: any) => unit.id === unitId);
+        setSelectedUnit(unit);
+        setSelectedUnitCategories(unit.categoryLinks.categoryLink);
+        setSelectedUnitWeapons(unit.profiles.profile);
     }
 
     return (
@@ -42,8 +53,18 @@ const UnitSelect: Component<any> = (props) => {
             </Row>
             <Show when={selectedUnit() != ""}>
                 <Row class="mb-3 p-0 justify-content-center">
+                    <Col>
+                        <CategoryLinks categories={selectedUnitCategories()} />
+                    </Col>
+                </Row>
+                <Row class="mb-3 p-0 justify-content-center">
                     <Col class="col-12">
                         <UnitInfo unit={selectedUnit()} />
+                    </Col>
+                </Row>
+                <Row class="mb-3 p-0 justify-content-center">
+                    <Col class="col-12">
+                        <WeaponProfile weapons={selectedUnitWeapons()} />
                     </Col>
                 </Row>
             </Show>
