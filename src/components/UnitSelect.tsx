@@ -7,7 +7,7 @@ import CategoryLinks from "./CategoryLinks";
 const UnitSelect: Component<any> = (props) => {
     const [selectedUnit, setSelectedUnit] = createSignal("");
     const [selectedUnitCategories, setSelectedUnitCategories] = createSignal([]);
-    const [selectedUnitWeapons, setSelectedUnitWeapons] = createSignal([]);
+    const [selectedUnitWeapons, setSelectedUnitWeapons] = createSignal([])
 
     async function handleUnitSelect(e: any) {
         setSelectedUnit("");
@@ -31,7 +31,7 @@ const UnitSelect: Component<any> = (props) => {
         let unit = props.units.find((unit: any) => unit.id === unitId);
         setSelectedUnit(unit);
         setSelectedUnitCategories(unit.categoryLinks.categoryLink);
-        setSelectedUnitWeapons(unit.profiles.profile);
+        setSelectedUnitWeapons(unit.selectionEntries);
     }
 
     return (
@@ -52,12 +52,14 @@ const UnitSelect: Component<any> = (props) => {
                 </Col>
             </Row>
             <Show when={selectedUnit() != ""}>
+                category links
                 <Row class="mb-3 p-0 justify-content-center">
                     <Col>
                         <CategoryLinks categories={selectedUnitCategories()} />
                     </Col>
                 </Row>
                 <Row class="mb-3 p-0 justify-content-center">
+                    unit info
                     <Col class="col-12">
                         <UnitInfo unit={selectedUnit()} />
                     </Col>
