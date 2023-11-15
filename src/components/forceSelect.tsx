@@ -2,6 +2,7 @@ import { For, Show, createSignal } from "solid-js";
 import { Row, Col } from "solid-bootstrap";
 import readXML from "../readxml";
 import UnitSelect from "./UnitSelect";
+import logError from "../func/logError";
 
 function ForceSelect() {
     const [forces] = createSignal([
@@ -215,47 +216,98 @@ function ForceSelect() {
     const [selectedForces, setSelectedForces] = createSignal([{}]);
 
     async function handleSelectChange(e: any) {
-
         const catalogue: string = e.target.value;
-        if (catalogue === "Select one") { 
+        if (catalogue === "Select one") {
             setSelectedForces([{}]);
-            return; 
+            return;
         }
 
-        await readXML(catalogue)
-            .then((res) => {
-                const entryLinks: Array<object> = res.catalogue.entryLinks.entryLink;
-                const selectionEntries: Array<object> = res.catalogue.sharedSelectionEntries.selectionEntry;
+        await readXML(catalogue).then((res) => {
+
+            // initialize empty array
+            let selectedEntries: Array<object> = [];
+            let arrayPath: string = "";
+
+            // check if entryLink property exists
+            if (res.catalogue.entryLinks === undefined) {
+                arrayPath = "res.catalogue.sharedSelectionEntries.selectionEntry";
+                // logError("No entryLinks property found.");
+
+                // data is contained inside res.catalogue.sharedSelectionEntries.selectionEntry
+                // console.log(res.catalogue.sharedSelectionEntries.selectionEntry);
                 
-                // for each object inside entryLinks, find object in selectionEntries with id matching targetId
+            } else {
+                // console.log('entryLinks property found');
+                // console.log(res.catalogue.entryLinks.entryLink);
+                arrayPath = "res.catalogue.entryLinks.entryLink";
+            }
+
+
+            /**
+             * TODO:
+             * split this into two functions
+             * one for entryLinks
+             * one for sharedSelectionEntries
+             * 
+             * this seems to be the primary difference in catalogues
+             */
+
+
+            // check if res.catalogue.entryLinks.entryLink exists
+            if (res.catalogue.entryLinks.entryLink !== undefined) {
+                const entryLinks: Array<object> =
+                    res.catalogue.entryLinks.entryLink;
+                const selectionEntries: Array<object> =
+                    res.catalogue.sharedSelectionEntries.selectionEntry;
+
+                // for each object inside entryLinks, find object in selectionEntries
+                // with id matching targetId
                 // then, push that object into a new array
                 const selectedEntries: Array<any> = [];
                 entryLinks.forEach((entryLink: any) => {
                     const entryId: string = entryLink.targetId;
-                    const selectedEntry: any = selectionEntries.find((selectionEntry: any) => selectionEntry.id === entryId);
-                    if (selectedEntry && (selectedEntry.type === "model" || selectedEntry.type === "unit") ) { selectedEntries.push(selectedEntry) };
+                    const selectedEntry: any = selectionEntries.find(
+                        (selectionEntry: any) => selectionEntry.id === entryId,
+                    );
+                    if (
+                        selectedEntry &&
+                        (selectedEntry.type === "model" ||
+                            selectedEntry.type === "unit")
+                    ) {
+                        selectedEntries.push(selectedEntry);
+                    }
                 });
 
                 // sort selectedEntries by name
                 selectedEntries.sort((a: any, b: any) => {
                     const nameA = a.name.toUpperCase();
                     const nameB = b.name.toUpperCase();
-                    if (nameA < nameB) { return -1 };
-                    if (nameA > nameB) { return 1 };
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
                     return 0;
                 });
+            }
 
-                setSelectedForces(selectedEntries);
-            });
+            if (!selectedEntries) {
+                logError("No selected entries found.");
+            }
+
+            setSelectedForces(selectedEntries);
+        });
     }
-
-
 
     return (
         <form>
             <Row class="mb-3">
                 <Col class="mb-3 col-12">
-                    <label for="forceSelectForm" class="form-label">
+                    <label
+                        for="forceSelectForm"
+                        class="form-label"
+                    >
                         Select Forces
                     </label>
                     <select
@@ -273,7 +325,6 @@ function ForceSelect() {
                             )}
                         </For>
                     </select>
-
                 </Col>
             </Row>
             <Show when={selectedForces().length > 1}>

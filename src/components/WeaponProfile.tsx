@@ -1,4 +1,4 @@
-import { For, Index } from "solid-js";
+import { For } from "solid-js";
 
 type WeaponProfileProps = {
   weapons: {
